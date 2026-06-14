@@ -1,0 +1,199 @@
+{
+  "info": {
+    "_postman_id": "4f1d2b3c-9a8e-4e7f-bc21-0d4a7a5e9c10",
+    "name": "Hub Central · Full API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección unificada de Hub Central (NestJS): App, Health, Webhooks y Plugins. {{base_url}} DEBE incluir el prefijo /api/v1 (ej: http://localhost:3004/api/v1). Variables: base_url, HUB_CENTRAL_SECRET, x_tenant_id, x-user-email."
+  },
+  "item": [
+    {
+      "name": "App",
+      "item": [
+        {
+          "name": "App · Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/", "host": ["{{base_url}}"], "path": [""] }
+          }
+        },
+        {
+          "name": "App · Version",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/version", "host": ["{{base_url}}"], "path": ["version"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health · General",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+          }
+        },
+        {
+          "name": "Health · Database",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health/database", "host": ["{{base_url}}"], "path": ["health", "database"] }
+          }
+        },
+        {
+          "name": "Health · Redis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health/redis", "host": ["{{base_url}}"], "path": ["health", "redis"] }
+          }
+        },
+        {
+          "name": "Health · Ecosystem",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health/ecosystem", "host": ["{{base_url}}"], "path": ["health", "ecosystem"] }
+          }
+        },
+        {
+          "name": "Health · Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health/metrics", "host": ["{{base_url}}"], "path": ["health", "metrics"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Webhooks · Health",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{base_url}}/webhooks/health", "host": ["{{base_url}}"], "path": ["webhooks", "health"] }
+          }
+        },
+        {
+          "name": "Webhooks · Graf",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-api-key", "value": "{{HUB_CENTRAL_SECRET}}" },
+              { "key": "x-tenant-id", "value": "{{x_tenant_id}}" },
+              { "key": "x-source", "value": "graf" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_type\": \"order.paid\",\n  \"data\": {\n    \"order\": { \"id\": \"ord_123\", \"total\": 100.5 },\n    \"store\": { \"owner\": { \"email\": \"owner@example.com\" } }\n  }\n}"
+            },
+            "url": { "raw": "{{base_url}}/webhooks/graf", "host": ["{{base_url}}"], "path": ["webhooks", "graf"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Plugins",
+      "item": [
+        {
+          "name": "Plugins · Catálogo global",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/plugins/catalog", "host": ["{{base_url}}"], "path": ["plugins", "catalog"] }
+          }
+        },
+        {
+          "name": "Plugins · Listar por usuario",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-user-email", "value": "owner@example.com" } ],
+            "url": {
+              "raw": "{{base_url}}/plugins/plugins?service=hubcentral",
+              "host": ["{{base_url}}"],
+              "path": ["plugins", "plugins"],
+              "query": [ { "key": "service", "value": "hubcentral" } ]
+            }
+          }
+        },
+        {
+          "name": "Credenciales · Upsert (apisigo)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-user-email", "value": "owner@example.com" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true,\n  \"config\": {\n    \"apiKey\": \"{{HUB_CENTRAL_SECRET}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/plugins/plugins/apisigo/credentials?service=hubcentral",
+              "host": ["{{base_url}}"],
+              "path": ["plugins", "plugins", "apisigo", "credentials"],
+              "query": [ { "key": "service", "value": "hubcentral" } ]
+            }
+          }
+        },
+        {
+          "name": "Credenciales · Obtener (apisigo)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-user-email", "value": "owner@example.com" } ],
+            "url": {
+              "raw": "{{base_url}}/plugins/plugins/apisigo?service=hubcentral",
+              "host": ["{{base_url}}"],
+              "path": ["plugins", "plugins", "apisigo"],
+              "query": [ { "key": "service", "value": "hubcentral" } ]
+            }
+          }
+        },
+        {
+          "name": "Credenciales · Eliminar (apisigo)",
+          "request": {
+            "method": "DELETE",
+            "header": [ { "key": "x-user-email", "value": "owner@example.com" } ],
+            "url": {
+              "raw": "{{base_url}}/plugins/plugins/apisigo/credentials?service=hubcentral",
+              "host": ["{{base_url}}"],
+              "path": ["plugins", "plugins", "apisigo", "credentials"],
+              "query": [ { "key": "service", "value": "hubcentral" } ]
+            }
+          }
+        },
+        {
+          "name": "Plugin · Health (apisigo)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-user-email", "value": "owner@example.com" } ],
+            "url": {
+              "raw": "{{base_url}}/plugins/plugins/apisigo/health?service=hubcentral",
+              "host": ["{{base_url}}"],
+              "path": ["plugins", "plugins", "apisigo", "health"],
+              "query": [ { "key": "service", "value": "hubcentral" } ]
+            }
+          }
+        },
+        {
+          "name": "Plugins · Health global",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/plugins/health", "host": ["{{base_url}}"], "path": ["plugins", "health"] }
+          }
+        }
+      ]
+    }
+  ]
+}
